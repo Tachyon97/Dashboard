@@ -1,42 +1,57 @@
-// src/Auth.js
-import React, { useState } from 'react';
-import { auth } from './firebase';
-import { Container, Form, Button } from 'react-bootstrap';
+import React, { useState } from 'react';  
+import { auth, db } from './firebase';  
+import { Container, Form, Button, Checkbox } from 'react-bootstrap';  
 
-const Auth = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const Auth = () => {  
+  const [email, setEmail] = useState('');  
+  const [password, setPassword] = useState('');  
+  const [isAdmin, setIsAdmin] = useState(false); // New state variable for the checkbox
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSignup = async (event) => {  
+    event.preventDefault();  
 
-    try {
-      await auth.signInWithEmailAndPassword(email, password);
-    } catch (error) {
-      console.error(error);
-      // handle error
-    }
-  };
+    try {  
+      const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+      const user = userCredential.user;
+      await db.collection('users').doc(user.uid).set({
+        email: email,
+        role: isAdmin ? 'admin' : 'driver',
+      });
 
-  return (
-    <Container>
-      <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        </Form.Group>
+      if (isAdmin) {
+        // Redirect to AdminPage
+      } else {
+        // Redirect to DriverPage
+      }
+    } catch (error) {  
+      console.error(error);  
+      // Handle error  
+    }  
+  };  
 
-        <Form.Group controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        </Form.Group>
+  return (  
+    <Container>  
+      <Form onSubmit={handleSignup}>  
+        <Form.Group controlId="formBasicEmail">  
+          <Form.Label>Email address</Form.Label>  
+          <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)} />  
+        </Form.Group>  
 
-        <Button variant="primary" type="submit">
-          Submit
-        </Button>
-      </Form>
-    </Container>
-  );
-};
+        <Form.Group controlId="formBasicPassword">  
+          <Form.Label>Password</Form.Label>  
+          <Form.Control type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />  
+        </Form.Group>  
+
+        <Form.Group controlId="formBasicCheckbox">  
+          <Form.Check type="checkbox" label="I am an admin" checked={isAdmin} onChange={(e) => setIsAdmin(e.target.checked)} />  
+        </Form.Group>  
+
+        <Button variant="primary" type="submit">  
+          Sign Up  
+        </Button>  
+      </Form>  
+    </Container>  
+  );  
+};  
 
 export default Auth;
