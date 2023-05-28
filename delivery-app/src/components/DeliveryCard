@@ -1,0 +1,18 @@
+import React from 'react';
+import { Card } from 'react-bootstrap';
+
+const DeliveryCard = ({ delivery }) => {
+  return (
+    <Card style={{ marginBottom: '10px' }}>
+      <Card.Body>
+        <Card.Title>{delivery.pickupLocation} to {delivery.dropOffLocation}</Card.Title>
+        <Card.Text>
+          Address: {delivery.address} <br />
+          Driver: {delivery.driver}
+        </Card.Text>
+      </Card.Body>
+    </Card>
+  );
+};
+
+export default DeliveryCard;
