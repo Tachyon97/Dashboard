@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { db } from '../firebase';  
 import { collection, addDoc } from 'firebase/firestore';  
 import { Container, Form, Button, Row, Col, Navbar } from 'react-bootstrap';  
-import '../adminpage.css'; // Import the custom CSS file  
 
 function AdminPage() {  
   const [delivery, setDelivery] = useState({  
