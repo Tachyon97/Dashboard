@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { db } from '../firebase';
-import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 import { Container, Form, Button, Row, Col, Navbar } from 'react-bootstrap';
+import '../adminpage.css'; // Import the custom CSS file
 
 function AdminPage() {
   const [delivery, setDelivery] = useState({
@@ -15,13 +16,14 @@ function AdminPage() {
     event.preventDefault();
     try {
       await addDoc(collection(db, 'deliveries'), delivery);
+      console.log('Document added to Firestore');
     } catch (e) {
       console.error('Error adding document: ', e);
     }
   };
 
   return (
-    <Container>
+    <Container className="admin-page">
       <Navbar bg="light" variant="light">
         <Navbar.Brand href="#home">Admin Page</Navbar.Brand>
         <Navbar.Toggle />
@@ -33,33 +35,9 @@ function AdminPage() {
       </Navbar>
 
       <Row>
-        <Col>
+        <Col md={6}>
           <h1>Create Delivery</h1>
           <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="formAddress">
-              <Form.Label>Delivery Address</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter address"
-                value={delivery.address}
-                onChange={(e) =>
-                  setDelivery({ ...delivery, address: e.target.value })
-                }
-              />
-            </Form.Group>
-
-            <Form.Group controlId="formDriver">
-              <Form.Label>Driver</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter driver's email"
-                value={delivery.driver}
-                onChange={(e) =>
-                  setDelivery({ ...delivery, driver: e.target.value })
-                }
-              />
-            </Form.Group>
-
             <Form.Group controlId="formPickupLocation">
               <Form.Label>Pickup Location</Form.Label>
               <Form.Control
@@ -90,7 +68,7 @@ function AdminPage() {
           </Form>
         </Col>
 
-        <Col>
+        <Col md={6}>
           {/* You can add components for Created Deliveries and Completed Deliveries here */}
         </Col>
       </Row>
